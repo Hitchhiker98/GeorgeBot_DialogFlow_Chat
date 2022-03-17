@@ -1,0 +1,173 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "poppings", sans-serif;
+  scroll-behavior: smooth;
+}
+
+
+  
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* background-image: linear-gradient(to right, #dcdde1, #f5f6fa ); */
+  background: linear-gradient(
+    -45deg,
+    rgba(255, 213, 69),
+    rgba(255, 63, 137),
+    rgba(187, 84, 255),
+    rgba(86, 210, 255)
+  );
+  background-size: 200% 200%;
+  animation: gradient 10s ease infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(255, 255, 255);
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.chatbox {
+  background: linear-gradient(
+    to right bottom,
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.3)
+  );
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
+}
+
+.chatbox::-webkit-scrollbar {
+    display: none;
+}
+
+.msg-row {
+  display: flex;
+  align-items: center;
+  margin: 35px 25px;
+}
+
+.msg-text {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 20px 40px;
+  border-radius: 8px;
+  flex-basis: 70%;
+  font-weight: 300;
+}
+
+.msg-img {
+  /* transform: scale(0.2); */
+  width: 50px;
+  background: transparent;
+  border-radius: 50%;
+  margin: 0 20px;
+}
+
+.msg-row2 {
+  justify-content: flex-end;
+}
+
+.col-1 {
+  
+  padding: 20px;
+  
+}
+
+/* .col-1 input {
+  border: 0;
+  outline: none;
+  padding: 20px 40px;
+  color: #fff;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 300;
+} */
+
+::placeholder {
+  color: #fff;
+  opacity: 0.6;
+}
+
+.chatinput {
+  width: 100%;
+
+}
+
+.recordBtn {
+    display: flex;
+}
+
+.btn {
+  border: none;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 12px 16px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 20px;
+ 
+  
+}
+
+.btn_pause {
+    border-left: rgba(255, 255, 255, 0.2) 2px solid;
+ font-size: 14px;
+    
+}
+
+button:disabled{
+    cursor: not-allowed;
+}
+
+.chattext {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chattext input {
+  border: 0;
+  outline: none;
+  padding: 20px 30px;
+  background: transparent;
+  color: white;
+  width: 85%;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+
+.button {
+  opacity: 0.2;
+}
+
+
+@media (min-width: 600px) {
+    .chatbox {
+        width: 60%;
+        height: 80vh;
+    }
+    .chatinput {
+        width: 60%;
+
+    }
+}
+
+

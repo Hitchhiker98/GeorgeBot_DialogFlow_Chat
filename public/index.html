@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"
+    />
+    <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io-stream/0.9.1/socket.io-stream.js"></script>
+    <script
+      src="https://kit.fontawesome.com/6f9db9e598.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="index.css" />
+    <title>Design</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="chatbox">
+        <div class="col-1" id="text">
+          <div class="msg-row">
+            <button class="button"></button>
+            <div class="msg-text">
+              <p>I am waiting for your reply</p>
+            </div>
+            <img src="turtle.png" alt="bot-picture" class="msg-img" />
+          </div>
+          <div class="msg-row msg-row2">
+            <img src="user.png" alt="bot-picture" class="msg-img" />
+            <button class="button"></button>
+            <div class="msg-text">
+              <p>Hello There</p>
+            </div>
+          </div>
+          <div class="msg-row">
+            <button class="button"></button>
+            <div class="msg-text">
+              <p>Great! Nice to meet you!</p>
+            </div>
+            <img src="turtle.png" alt="bot-picture" class="msg-img" />
+          </div>
+        
+        </div>
+      </div>
+      <div class="chatinput">
+        <div class="chattext">
+          <div class="recordBtn">
+            <button class="btn" id="start-recording" disabled>
+              <i class="fas fa-microphone"></i>
+            </button>
+            <button class="btn btn_pause" id="stop-recording" disabled>
+              <i class="fas fa-pause"></i>
+            </button>
+          </div>
+          <input type="text" id="message" value=""  placeholder="Type your message or send voice..." />
+          <button class="btn" id="send-message">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      const socketio = io();
+      const socket = socketio.on("connect", function () {
+        startRecording.disabled = false;
+      });
+      
+      
+      const startRecording = document.getElementById("start-recording");
+      const stopRecording = document.getElementById("stop-recording");
+      const sendMessage = document.getElementById('send-message');
+      const sendMessageInput = document.getElementById('message');
+      const lastText = document.getElementById("text").lastElementChild
+      const testText = document.getElementsByClassName("button");
+      const chat = document.querySelector(".col-1");
+      let recordAudio;
+
+      //2)
+      
+      sendMessage.onclick = function () {
+        var message = sendMessageInput.value;
+        socketio.emit("textMessage", message);
+       
+        // testText[testText.length - 1].focus({preventScroll:false});
+        let user = `
+          <div class="msg-row msg-row2">
+               <button class="button"></button>
+                <img src="user.png" alt="bot-picture" class="msg-img" />
+                <div class="msg-text">
+                  <p>${message}</p>
+                </div>
+              </div>`;
+
+        
+        sendMessageInput.value = ""
+        chat.innerHTML += user;
+        chat.lastElementChild.scrollIntoView();
+        console.log(lastText.firstChild)
+        console.log(document.getElementById("btn"))
+        console.log(testText[testText.length - 1])
+        
+      };
+
+      sendMessageInput.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          sendMessage.click();
+        }
+      })
+
+     
+      //3)
+      startRecording.onclick = function () {
+        startRecording.disabled = true;
+        startRecording.style.backgroundColor = "tomato";
+        //4)
+        // make use of WebRTC JavaScript method getUserMedia()
+        // to capture the browser microphone stream
+        navigator.getUserMedia(
+          {
+            audio: true,
+          },
+          function (stream) {
+            //5)
+            recordAudio = RecordRTC(stream, {
+              type: "audio",
+
+              //6)
+              mimeType: "audio/webm",
+              sampleRate: 44100,
+              // used by StereoAudioRecorder
+              // the range 22050 to 96000.
+              // let us force 16khz recording:
+              desiredSampRate: 16000,
+              // this should match with your server code
+
+              // MediaStreamRecorder, StereoAudioRecorder, WebAssemblyRecorder
+              // CanvasRecorder, GifRecorder, WhammyRecorder
+              recorderType: StereoAudioRecorder,
+              // Dialogflow / STT requires mono audio
+              numberOfAudioChannels: 1,
+            });
+
+            recordAudio.startRecording();
+            stopRecording.disabled = false;
+          },
+          function (error) {
+            console.error(JSON.stringify(error));
+          }
+        );
+      };
+
+      //7)
+      stopRecording.onclick = function () {
+        // recording stopped
+        startRecording.disabled = false;
+        stopRecording.disabled = true;
+        startRecording.style.backgroundColor = "rgba(255, 255, 255, 0.3)";
+
+        // stop audio recorder
+        recordAudio.stopRecording(function () {
+          // after stopping the audio, get the audio data
+          recordAudio.getDataURL(function (audioDataURL) {
+            //8)
+            var files = {
+              audio: {
+                type: recordAudio.getBlob().type || "audio/wav",
+                dataURL: audioDataURL,
+              },
+            };
+            // submit the audio file to the server
+            socketio.emit("message", files);
+          });
+        });
+      };
+
+      //9)
+      // when the server found results send
+      // it back to the client
+      // const resultpreview = document.getElementById("results");
+      // const intentInput = document.getElementById("intent");
+      // const textInput = document.getElementById("queryText");
+      socketio.on("results", function (data) {
+        console.log("data 128", data);
+        // show the results on the screen
+        if (data[0].queryResult) {
+          // resultpreview.innerHTML += "" + data[0].queryResult.fulfillmentText;
+          // intentInput.value = data[0].queryResult.intent
+          //   ? data[0].queryResult.intent.displayName
+          //   : "";
+          // textInput.value = "" + data[0].queryResult.queryText;
+          
+         console.log(data[0].queryResult, "here it is")
+        //  check if text property is true
+         if (!data[0].queryResult.text) {
+          let user = `
+          <div class="msg-row msg-row2">
+               <button class="button"></button>
+                <img src="user.png" alt="bot-picture" class="msg-img" />
+                <div class="msg-text">
+                  <p>${data[0].queryResult.queryText}</p>
+                </div>
+              </div>`;
+
+          chat.innerHTML += user;
+         }
+         
+
+          let dialogFlow = `
+            <div class="msg-row">
+              <button class="button"></button>
+              <div class="msg-text">
+                  <p>${data[0].queryResult.fulfillmentText}</p>
+                </div>
+                <img src="turtle.png" alt="bot-picture" class="msg-img" />
+               
+              </div>`;
+
+          chat.innerHTML += dialogFlow;
+
+          console.log(chat);
+          console.log(dialogFlow);
+          chat.lastElementChild.scrollIntoView();
+          // testText[testText.length - 1].focus({preventScroll:false});
+          playOutput(data[0].outputAudio);
+        }
+      });
+
+      function playOutput(arrayBuffer){
+        let audioContext = new AudioContext();
+        let outputSource;
+        try {
+            if(arrayBuffer.byteLength > 0){
+                audioContext.decodeAudioData(arrayBuffer,
+                function(buffer){
+                    audioContext.resume();
+                    outputSource = audioContext.createBufferSource();
+                    outputSource.connect(audioContext.destination);
+                    outputSource.buffer = buffer;
+                    outputSource.start(0);
+                },
+                function(){
+                    console.log(arguments);
+                });
+            }
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+  </body>
+</html>
+
+
