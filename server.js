@@ -165,3 +165,5 @@ async function detectIntent(audio) {
 
 setupDialogflow();
 setupServer();
+
+console.log("SERVER UP")
