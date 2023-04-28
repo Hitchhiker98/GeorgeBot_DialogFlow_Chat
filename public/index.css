@@ -16,10 +16,10 @@
   /* background-image: linear-gradient(to right, #dcdde1, #f5f6fa ); */
   background: linear-gradient(
     -45deg,
-    rgba(255, 213, 69),
-    rgba(255, 63, 137),
-    rgba(187, 84, 255),
-    rgba(86, 210, 255)
+    rgb(190, 147, 7),
+    rgb(158, 6, 64),
+    rgb(98, 7, 159),
+    rgb(10, 119, 158)
   );
   background-size: 200% 200%;
   animation: gradient 10s ease infinite;
