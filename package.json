@@ -1,9 +1,9 @@
 {
   "name": "y",
   "version": "1.0.0",
-  "author": "Lee Boonstra",
+  "author": "Giorgi",
   "license": "Apache-2.0",
-  "description": "Simple Speech Examples",
+  "description": "dialogflow-chat-app",
   "engines": {
     "node": ">=10.9.0 <13.0.0",
     "yarn": ">=1.17.3 <=1.19.1"
@@ -22,7 +22,6 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
-    "nodemon": "^2.0.12",
     "pb-util": "^0.1.2",
     "recordrtc": "latest",
     "socket.io": "^2.3.0",
@@ -31,5 +30,17 @@
     "through2": "^3.0.1",
     "util": "^0.12.1",
     "uuid": "^3.3.3"
-  }
+  },
+  "main": "server.js",
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hitchhiker98/GeorgeBot_DialogFlow_Chat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Hitchhiker98/GeorgeBot_DialogFlow_Chat/issues"
+  },
+  "homepage": "https://github.com/Hitchhiker98/GeorgeBot_DialogFlow_Chat#readme"
 }
