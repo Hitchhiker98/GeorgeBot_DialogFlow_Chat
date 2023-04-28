@@ -1,6 +1,6 @@
 const config = require("./config/keys");
 const projectId = config.googleProjectID;
-const port = config.npm_config_PORT || 3000;
+const port = process.env.PORT || 3000;
 
 const languageCode = config.dialogFlowSessionLanguageCode;
 let encoding = "AUDIO_ENCODING_LINEAR_16";
