@@ -24,8 +24,7 @@
     "socket.io-stream": "^0.9.1",
     "stream": "0.0.2",
     "through2": "^3.0.1",
-    "util": "^0.12.1",
-    "uuid": "^3.3.3"
+    "util": "^0.12.1"
   },
   "main": "server.js",
   "devDependencies": {
